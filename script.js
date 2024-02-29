@@ -63,3 +63,52 @@ function addPrompt(e) {
     e.preventDefault();
     // Implementation would be similar to the submit event listener above
 }
+
+// Continuing from the previous code...
+
+// Function to open a prompt for filling in the slots and copying to the clipboard
+function fillAndCopyPrompt(index) {
+    const prompt = prompts[index];
+    const slotRegex = /{{(.*?)}}/g;
+    let match;
+    let slots = [];
+    while ((match = slotRegex.exec(prompt.template)) !== null) {
+        slots.push(match[1]);
+    }
+
+    if (slots.length > 0) {
+        const filledSlots = {};
+        let filledPrompt = prompt.template;
+        slots.forEach(slot => {
+            const slotValue = prompt(slot, `Enter value for ${slot}`);
+            filledSlots[slot] = slotValue;
+            filledPrompt = filledPrompt.replace(`{{${slot}}}`, slotValue);
+        });
+
+        // Copy filled prompt to clipboard
+        navigator.clipboard.writeText(filledPrompt).then(() => {
+            alert('Prompt copied to clipboard!');
+        }, (err) => {
+            console.error('Could not copy prompt to clipboard: ', err);
+        });
+    } else {
+        // If no slots, just copy the original prompt
+        navigator.clipboard.writeText(prompt.template).then(() => {
+            alert('Prompt copied to clipboard!');
+        }, (err) => {
+            console.error('Could not copy prompt to clipboard: ', err);
+        });
+    }
+}
+
+// Adding a copy button to each prompt in the renderPrompts function
+function renderPrompts() {
+    promptsContainer.innerHTML = '';
+    prompts.forEach((prompt, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${prompt.title} <button onclick="editPrompt(${index})">Edit</button> <button onclick="fillAndCopyPrompt(${index})">Fill & Copy</button>`;
+        promptsContainer.appendChild(li);
+    });
+}
+
+// Make sure to call renderPrompts() again if not already called after modifications to include the Fill & Copy button.
