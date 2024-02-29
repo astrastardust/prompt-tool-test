@@ -1,12 +1,85 @@
-body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
+/* Basic Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-#prompts-list {
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    padding: 20px;
+    color: #333;
+}
+
+header {
     margin-bottom: 20px;
 }
 
-button {
+h1, h2 {
+    color: #333;
+}
+
+ul {
+    list-style: none;
+}
+
+/* Layout Styles */
+main {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+}
+
+#prompt-list ul {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+#prompt-list li {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}
+
+#prompt-list li:last-child {
+    border-bottom: none;
+}
+
+#prompt-editor {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button[type="submit"] {
+    background-color: #5cb85c;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #449d44;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    main {
+        grid-template-columns: 1fr;
+    }
 }
