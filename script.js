@@ -1,98 +1,65 @@
 document.addEventListener('DOMContentLoaded', () => {
-    displayPrompts();
-});
+    const promptsContainer = document.getElementById('prompts');
+    const promptForm = document.getElementById('prompt-form');
+    const titleInput = document.getElementById('prompt-title');
+    const templateInput = document.getElementById('prompt-template');
 
-function savePrompt(promptText) {
-    const prompts = JSON.parse(localStorage.getItem('prompts') || '[]');
-    prompts.push(promptText);
-    localStorage.setItem('prompts', JSON.stringify(prompts));
-    displayPrompts();
-}
+    let prompts = JSON.parse(localStorage.getItem('prompts')) || [];
 
-function displayPrompts() {
-    const prompts = JSON.parse(localStorage.getItem('prompts') || '[]');
-    const listElement = document.getElementById('prompts-list');
-    listElement.innerHTML = ''; // Clear current list
-    prompts.forEach((prompt, index) => {
-        const promptElement = document.createElement('div');
-        promptElement.textContent = prompt;
-        listElement.appendChild(promptElement);
+    // Function to render prompts to the UI
+    function renderPrompts() {
+        promptsContainer.innerHTML = '';
+        prompts.forEach((prompt, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `${prompt.title} <button onclick="editPrompt(${index})">Edit</button>`;
+            promptsContainer.appendChild(li);
+        });
+    }
+
+    // Save prompt to local storage
+    function savePrompts() {
+        localStorage.setItem('prompts', JSON.stringify(prompts));
+    }
+
+    // Submit form to add or update a prompt
+    promptForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const newPrompt = {
+            title: titleInput.value,
+            template: templateInput.value
+        };
+        prompts.push(newPrompt);
+        savePrompts();
+        renderPrompts();
+        titleInput.value = '';
+        templateInput.value = '';
     });
-}
 
-document.getElementById('new-prompt-btn').addEventListener('click', () => {
-    const promptText = prompt('Enter new prompt text. Use {} for insertion points.');
-    if (promptText) {
-        savePrompt(promptText);
-    }
+    // Edit a prompt
+    window.editPrompt = function(index) {
+        const prompt = prompts[index];
+        titleInput.value = prompt.title;
+        templateInput.value = prompt.template;
+        // Update instead of add
+        document.getElementById('prompt-form').onsubmit = function(e) {
+            e.preventDefault();
+            prompt.title = titleInput.value;
+            prompt.template = templateInput.value;
+            savePrompts();
+            renderPrompts();
+            // Reset form to default behavior
+            promptForm.onsubmit = addPrompt;
+            titleInput.value = '';
+            templateInput.value = '';
+        };
+    };
+
+    // Initially render saved prompts
+    renderPrompts();
 });
 
-// Later, you'll add more functionality here to handle the insertion points and copyin
-
-// g to clipboard.
-document.addEventListener('DOMContentLoaded', () => {
-    displayPrompts();
-    document.getElementById('new-prompt-btn').addEventListener('click', createNewPrompt);
-});
-
-function savePrompt(promptText) {
-    const prompts = JSON.parse(localStorage.getItem('prompts') || '[]');
-    prompts.push(promptText);
-    localStorage.setItem('prompts', JSON.stringify(prompts));
-    displayPrompts();
-}
-
-function displayPrompts() {
-    const prompts = JSON.parse(localStorage.getItem('prompts') || '[]');
-    const listElement = document.getElementById('prompts-list');
-    listElement.innerHTML = ''; // Clear current list
-    prompts.forEach((prompt, index) => {
-        const promptElement = document.createElement('div');
-        promptElement.textContent = prompt;
-        promptElement.addEventListener('click', () => fillAndCopyPrompt(prompt));
-        listElement.appendChild(promptElement);
-    });
-}
-
-function createNewPrompt() {
-    const promptText = prompt('Enter new prompt text. Use {} for insertion points.');
-    if (promptText) {
-        savePrompt(promptText);
-    }
-}
-
-async function fillAndCopyPrompt(promptText) {
-    let filledPrompt = promptText;
-    let insertionPointIndex = filledPrompt.indexOf('{}');
-
-    while (insertionPointIndex !== -1) {
-        let userText = prompt('Enter text for the insertion point:');
-        // Replace first occurrence of '{}' with userText.
-        filledPrompt = filledPrompt.replace('{}', userText);
-        insertionPointIndex = filledPrompt.indexOf('{}');
-    }
-
-    if (navigator.clipboard && window.isSecureContext) {
-        // Use the Clipboard API to copy the text.
-        try {
-            await navigator.clipboard.writeText(filledPrompt);
-            alert('Prompt copied to clipboard!');
-        } catch (err) {
-            console.error('Failed to copy:', err);
-        }
-    } else {
-        // Clipboard API not available, provide a manual copy fallback.
-        let textArea = document.createElement("textarea");
-        textArea.value = filledPrompt;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            alert('Prompt copied to clipboard!');
-        } catch (err) {
-            console.error('Fallback: Oops, unable to copy', err);
-        }
-        document.body.removeChild(textArea);
-    }
+// Function to add a new prompt (default form behavior)
+function addPrompt(e) {
+    e.preventDefault();
+    // Implementation would be similar to the submit event listener above
 }
