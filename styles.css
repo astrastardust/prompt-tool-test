@@ -83,3 +83,34 @@ button[type="submit"]:hover {
         grid-template-columns: 1fr;
     }
 }
+
+/* Adding transitions for button hover effects */
+button {
+    transition: background-color 0.3s ease;
+}
+
+/* Improving form input focus */
+input[type="text"]:focus,
+textarea:focus {
+    border-color: #5cb85c;
+    outline: none;
+}
+
+/* Adding a more distinct style for the Fill & Copy button */
+button.fill-copy-btn {
+    background-color: #337ab7;
+    margin-left: 10px;
+}
+
+button.fill-copy-btn:hover {
+    background-color: #286090;
+}
+
+/* Styling for dynamic slot input prompts (if applicable) */
+.slot-input {
+    margin-bottom: 10px;
+}
+
+.slot-input input {
+    margin-top: 5px;
+}
