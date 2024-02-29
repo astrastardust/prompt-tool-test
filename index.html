@@ -3,14 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal GPT Prompts</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Prompt Library</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Personal GPT Prompts</h1>
-    <div id="prompts-list"></div>
-    <button id="new-prompt-btn">New Prompt</button>
-
+    <header>
+        <h1>Prompt Library</h1>
+    </header>
+    <main>
+        <section id="prompt-list">
+            <h2>Saved Prompts</h2>
+            <ul id="prompts"></ul>
+        </section>
+        <section id="prompt-editor">
+            <h2>Create/Edit Prompt</h2>
+            <form id="prompt-form">
+                <input type="text" id="prompt-title" placeholder="Prompt Title" required>
+                <textarea id="prompt-template" placeholder="Prompt Template (use {{}} for slots)" required></textarea>
+                <button type="submit">Save Prompt</button>
+            </form>
+        </section>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
